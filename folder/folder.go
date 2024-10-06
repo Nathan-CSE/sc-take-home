@@ -33,24 +33,24 @@ type driver struct {
 	// data structure to store folders
 	// or preprocessed data
 	folderTree map[uuid.UUID]*FolderNode
-	foldersByName map[string]FolderMapping
+	foldersByName map[string][]FolderMapping
 	allOrgIDs map[uuid.UUID]struct{}
 }
 
 func NewDriver(folders []Folder) IDriver {
 
 	folderTree := make(map[uuid.UUID]*FolderNode)
-	foldersByName := make(map[string]FolderMapping)
+	foldersByName := make(map[string][]FolderMapping)
 	allOrgIDs := make(map[uuid.UUID]struct{})
 
 	for _, folder := range folders {
 		// Add org to the set -> set avoids duplicates
 		allOrgIDs[folder.OrgId] = struct{}{}
 
-		foldersByName[folder.Name] = FolderMapping{
+		foldersByName[folder.Name] = append(foldersByName[folder.Name], FolderMapping{
 			OrgId: folder.OrgId,
 			Paths: folder.Paths,
-		}
+		})
 
 		// the root node of the tree corresponding to the org otherwise create
 		// a new root node
@@ -116,3 +116,7 @@ func printFolderTree(node *FolderNode, level int) {
 		printFolderTree(child, level + 1)
 	}
 }
+
+
+
+// func traverseFolderTree()
