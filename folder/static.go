@@ -33,6 +33,7 @@ type Folder struct {
 	Name  string    `json:"name"`
 	OrgId uuid.UUID `json:"org_id"`
 	Paths string    `json:"paths"`
+	ChildFolders []Folder  `json:"child_folders"`
 }
 
 func GenerateData() []Folder {
@@ -63,6 +64,7 @@ func GenerateData() []Folder {
 	return tree
 }
 
+// Modify this first to reflect the child folders directly
 func generateTree(depth int, tree []Folder) []Folder {
 	rng, _ := codename.DefaultRNG()
 
