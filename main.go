@@ -13,6 +13,7 @@ func main() {
 	// static.go, folder.go and get_folder.go are both part of the same folder package
 	// static.go has a bunch of helper methods and fixed types
 	res := folder.GetAllFolders()
+	// res := folder.GenerateData()
 
 	// example usage
 
@@ -21,7 +22,12 @@ func main() {
 	folderDriver := folder.NewDriver(res)
 	orgFolder := folderDriver.GetFoldersByOrgID(orgID)
 
-	folder.PrettyPrint(res)
+	
+	// Prints out all folders
+	// folder.PrettyPrint(res)
+	
 	fmt.Printf("\n Folders for orgID: %s", orgID)
 	folder.PrettyPrint(orgFolder)
+
+
 }

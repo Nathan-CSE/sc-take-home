@@ -7,16 +7,25 @@ func GetAllFolders() []Folder {
 }
 
 func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
-	folders := f.folders
+	// NOTE: Old Code
+	// folders := f.folders
 
-	res := []Folder{}
-	for _, f := range folders {
-		if f.OrgId == orgID {
-			res = append(res, f)
-		}
+	// res := []Folder{}
+	// for _, f := range folders {
+	// 	if f.OrgId == orgID {
+	// 		res = append(res, f)
+	// 	}
+	// }
+
+	// return res
+
+	folders, exists := f.orgFolders[orgID]
+
+	if exists {
+		return folders
 	}
 
-	return res
+	return []Folder{}
 
 }
 

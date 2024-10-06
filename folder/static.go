@@ -18,13 +18,13 @@ import (
 // If you do make changes here, be ready to discuss why these changes were made.
 
 // how many trees you want to generate
-const MaxRootSet = 4
+const MaxRootSet = 2
 
 // maximum possible children per node
-const MaxChild = 4
+const MaxChild = 2
 
 // max depth of the tree
-const MaxDepth = 5
+const MaxDepth = 3
 
 // the default orgID that we will be using for testing
 const DefaultOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
@@ -33,7 +33,6 @@ type Folder struct {
 	Name  string    `json:"name"`
 	OrgId uuid.UUID `json:"org_id"`
 	Paths string    `json:"paths"`
-	ChildFolders []Folder  `json:"child_folders"`
 }
 
 func GenerateData() []Folder {
@@ -48,34 +47,22 @@ func GenerateData() []Folder {
 
 		name := codename.Generate(rng, 0)
 
-		// Changed to fit the new hierarchial data structure
-		root := Folder{
-			Name:  name,
-			OrgId: orgId,
-			Paths: name,
-		}
-
-		root.ChildFolders = generateTree(1, []Folder{root})
-
-		tree = append(tree, root)
-
-		// subtree := make(chan []Folder)
-		// go func() {
-		// 	subtree <- generateTree(1, []Folder{
-		// 		{
-		// 			Name:  name,
-		// 			OrgId: orgId,
-		// 			Paths: name,
-		// 		},
-		// 	})
-		// }()
-		// tree = append(tree, <-subtree...)
+		subtree := make(chan []Folder)
+		go func() {
+			subtree <- generateTree(1, []Folder{
+				{
+					Name:  name,
+					OrgId: orgId,
+					Paths: name,
+				},
+			})
+		}()
+		tree = append(tree, <-subtree...)
 	}
 
 	return tree
 }
 
-// Modify this first to reflect the child folders directly
 func generateTree(depth int, tree []Folder) []Folder {
 	rng, _ := codename.DefaultRNG()
 
@@ -83,42 +70,22 @@ func generateTree(depth int, tree []Folder) []Folder {
 		return tree
 	}
 
-	// t refers to each folder 't' in the current tree slice/hierarchy
 	for _, t := range tree {
 		numOfChild := rng.Int()%MaxChild + 1
-
-		// This loop runs 'numOfChild' times to create the child folders for the current parent folder
-		// it generates a new child folder for each iteration
-		// Since I'm adding subfolder and adding depth, then i need to modify this loop
-		// to recursively generate subtrees for each folder
 		for i := 0; i < numOfChild; i++ {
 			name := codename.Generate(rng, 0)
 
-			childFolder := Folder{
-				Name: name,
-				OrgId: t.OrgId,
-				Paths: t.Paths + "." + name,
-			}
-
-			// I generate further childFolders for the childFolder datastructure that I just created
-			// to populate the tree, then append it to the current tree's ChildFolder property
-			childFolder.ChildFolders = generateTree(depth+1, []Folder{childFolder})
-
-			t.ChildFolders = append(t.ChildFolders, childFolder)
-
-
-			// childTree := make(chan []Folder)
-			// go func() {
-			// 	childTree <- generateTree(depth+1, []Folder{
-			// 		{
-			// 			Name:  name,
-			// 			OrgId: t.OrgId,
-			// 			Paths: t.Paths + "." + name,
-			// 			ChildFolders: generateTree(depth+1, []Folder{})
-			// 		},
-			// 	})
-			// }()
-			// tree = append(tree, <-childTree...)
+			childTree := make(chan []Folder)
+			go func() {
+				childTree <- generateTree(depth+1, []Folder{
+					{
+						Name:  name,
+						OrgId: t.OrgId,
+						Paths: t.Paths + "." + name,
+					},
+				})
+			}()
+			tree = append(tree, <-childTree...)
 		}
 	}
 
@@ -140,7 +107,8 @@ func GetSampleData() []Folder {
 	_, filename, _, _ := runtime.Caller(0)
 	fmt.Println(filename)
 	basePath := filepath.Dir(filename)
-	filePath := filepath.Join(basePath, "sample.json")
+	// filePath := filepath.Join(basePath, "sample.json")
+	filePath := filepath.Join(basePath, "sample2.json")
 
 	fmt.Println(filePath)
 
@@ -169,7 +137,8 @@ func WriteSampleData(data interface{}) {
 	_, filename, _, _ := runtime.Caller(0)
 	fmt.Println(filename)
 	basePath := filepath.Dir(filename)
-	filePath := filepath.Join(basePath, "sample.json")
+	// filePath := filepath.Join(basePath, "sample.json")
+	filePath := filepath.Join(basePath, "sample2.json")
 
 	fmt.Println(filePath)
 
