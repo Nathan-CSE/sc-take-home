@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	orgID2 := uuid.FromStringOrNil("3d514f27-4943-4043-a7b1-e39a32e4ee1a")
 	orgID := uuid.FromStringOrNil(folder.DefaultOrgID)
 
 	// static.go, folder.go and get_folder.go are both part of the same folder package
@@ -20,7 +21,7 @@ func main() {
 	// we can use folder driver to run code and process the data before hand I'm assuming
 	// to make it easier to process
 	folderDriver := folder.NewDriver(res)
-	orgFolder := folderDriver.GetFoldersByOrgID(orgID)
+	orgFolder := folderDriver.GetFoldersByOrgID(orgID2)
 
 	
 	// Prints out all folders
@@ -28,6 +29,11 @@ func main() {
 	
 	fmt.Printf("\n Folders for orgID: %s", orgID)
 	folder.PrettyPrint(orgFolder)
+
+	// allSubFolders := folderDriver.GetAllChildFolders(orgID, "stable-chadsangeling")
+	// allSubFolders := folderDriver.GetAllChildFolders(orgID, "discrete-whdsasdistler")
+	// fmt.Printf("\n Child folders for discrete-whistler:")
+	// folder.PrettyPrint(allSubFolders)
 
 
 }
