@@ -10,43 +10,38 @@ func GetAllFolders() []Folder {
 }
 
 func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
-	folders, exists := f.orgFolders[orgID]
+	rootNode, exists := f.folderTree[orgID]
 
-	if exists {
-		return folders
+	if !exists {
+		fmt.Println(errors.New("Invalid orgID provided."))
+		return []Folder{}
 	}
 
-	return []Folder{}
+	rootNode = rootNode
+
+	allFolders := []Folder{}
+	collectFolders(rootNode, &allFolders)
+
+	return allFolders
 
 }
 
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
-	orgFolder, validOrg := f.orgFolders[orgID]
+	_, validOrg := f.allOrgIDs[orgID]
 	if !validOrg {
 		fmt.Println(errors.New("Invalid orgID provided."))
 		return []Folder{}
 	}
 
-	fmt.Printf("Org folder contents:\n")
-	for _, folder := range orgFolder {
-		fmt.Printf("- %s\n", folder.Name)
-	}
-
 	// Check if the specified folder name exists in orgFolder and get its path
-	var folderPath string
-	folderExists := false
-	for _, folder := range orgFolder {
-		if folder.Name == name {
-			folderPath = folder.Paths
-			folderExists = true
-			break
-		}
-	}
 
-	if !folderExists {
+	folderDetails, exists := f.foldersByName[name]
+	if !exists {
 		fmt.Println(errors.New("Folder name does not exist in the orgFolder."))
 		return []Folder{}
 	}
+
+	folderPath := folderDetails.Paths
 
 	// Split the folder path to navigate through the tree
 	pathSegments := strings.Split(folderPath, ".")
@@ -67,15 +62,16 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 
 	// Get all the relevant child folders
 	childFolders := []Folder{}
-	collectChildFolders(currentNode, &childFolders)
+	collectFolders(currentNode, &childFolders)
 
 	return childFolders
 }
 
-// Adds all child folders to childFolders and recurses through each additional child folder
-func collectChildFolders(node *FolderNode, childFolders *[]Folder) {
+// Given a starting folder node, recurses through each child folder and adds it to 'folders'
+func collectFolders(node *FolderNode, folders *[]Folder) {
+
 	for _, childNode := range node.ChildNodes {
-		*childFolders = append(*childFolders, childNode.Folder)
-		collectChildFolders(childNode, childFolders)
+		*folders = append(*folders, childNode.Folder)
+		collectFolders(childNode, folders)
 	}
 }

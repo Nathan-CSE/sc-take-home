@@ -23,26 +23,37 @@ type FolderNode struct {
 	ChildNodes map[string]*FolderNode
 }
 
+type FolderMapping struct {
+	OrgId uuid.UUID
+	Paths string
+}
+
 type driver struct {
 	// define attributes here
 	// data structure to store folders
 	// or preprocessed data
-	orgFolders map[uuid.UUID][]Folder
 	folderTree map[uuid.UUID]*FolderNode
+	foldersByName map[string]FolderMapping
+	allOrgIDs map[uuid.UUID]struct{}
 }
 
 func NewDriver(folders []Folder) IDriver {
 
-	orgFolders := make(map[uuid.UUID][]Folder)
 	folderTree := make(map[uuid.UUID]*FolderNode)
+	foldersByName := make(map[string]FolderMapping)
+	allOrgIDs := make(map[uuid.UUID]struct{})
 
 	for _, folder := range folders {
-		// Add each folder to it's corresponding orgID key
-		orgFolders[folder.OrgId] = append(orgFolders[folder.OrgId], folder)
+		// Add org to the set -> set avoids duplicates
+		allOrgIDs[folder.OrgId] = struct{}{}
+
+		foldersByName[folder.Name] = FolderMapping{
+			OrgId: folder.OrgId,
+			Paths: folder.Paths,
+		}
 
 		// the root node of the tree corresponding to the org otherwise create
 		// a new root node
-		
 		rootNode, exists := folderTree[folder.OrgId]
 
 		if !exists {
@@ -77,23 +88,24 @@ func NewDriver(folders []Folder) IDriver {
 		currentNode.Folder = folder
 	}
 
-	fmt.Printf("======== OrgFolders ========\n")
-	for orgID, org := range orgFolders {
-		fmt.Printf("OrgID %s\n", orgID)
-		for _, folder := range org {
-			fmt.Printf("Folder: Name=%s, OrgId=%s, Paths=%s\n", folder.Name, folder.OrgId, folder.Paths)
-		}
-	}
+	// fmt.Printf("======== OrgFolders ========\n")
+	// for orgID, org := range orgFolders {
+	// 	fmt.Printf("OrgID %s\n", orgID)
+	// 	for _, folder := range org {
+	// 		fmt.Printf("Folder: Name=%s, OrgId=%s, Paths=%s\n", folder.Name, folder.OrgId, folder.Paths)
+	// 	}
+	// }
 
-	fmt.Printf("======== Tree structure ========\n")
-	for orgID, root := range folderTree {
-		fmt.Printf("OrgID: %s\n", orgID)
-		printFolderTree(root, 1)
-	}
+	// fmt.Printf("======== Tree structure ========\n")
+	// for orgID, root := range folderTree {
+	// 	fmt.Printf("OrgID: %s\n", orgID)
+	// 	printFolderTree(root, 1)
+	// }
 
 	return &driver{
-		orgFolders: orgFolders,
 		folderTree: folderTree,
+		foldersByName: foldersByName,
+		allOrgIDs: allOrgIDs,
 	}
 }
 

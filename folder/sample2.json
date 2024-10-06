@@ -43,5 +43,25 @@
           "name": "pure-slapstick",
           "org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
           "paths": "discrete-whistler.innocent-armor.pure-slapstick"
+  },
+  {
+          "name": "stable-changeling",
+          "org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+          "paths": "stable-changeling"
+  },
+  {
+          "name": "quiet-kingpin",
+          "org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+          "paths": "stable-changeling.quiet-kingpin"
+  },
+  {
+          "name": "sweet-warhawk",
+          "org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+          "paths": "stable-changeling.quiet-kingpin.sweet-warhawk"
+  },
+  {
+          "name": "flexible-humbug",
+          "org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+          "paths": "stable-changeling.quiet-kingpin.flexible-humbug"
   }
 ]

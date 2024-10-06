@@ -42,6 +42,57 @@ func Test_folder_GetFoldersByOrgID(t *testing.T) {
 			},
 		},
 		{
+			name: "Valid OrgID with 2 Separate Folder Trees",
+			orgID: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+			want: []folder.Folder{
+				{
+					Name:  "discrete-whistler",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "discrete-whistler",
+				},
+				{
+					Name:  "integral-jungle",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "discrete-whistler.integral-jungle",
+				},
+				{
+					Name:  "robust-batgirl",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "discrete-whistler.integral-jungle.robust-batgirl",
+				},
+				{
+					Name:  "innocent-armor",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "discrete-whistler.innocent-armor",
+				},
+				{
+					Name:  "pure-slapstick",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "discrete-whistler.innocent-armor.pure-slapstick",
+				},
+				{
+					Name:  "stable-changeling",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "stable-changeling",
+				},
+				{
+					Name:  "quiet-kingpin",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "stable-changeling.quiet-kingpin",
+				},
+				{
+					Name:  "sweet-warhawk",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "stable-changeling.quiet-kingpin.sweet-warhawk",
+				},
+				{
+					Name:  "flexible-humbug",
+					OrgId: uuid.FromStringOrNil("c1556e17-b7c0-45a3-a6ae-9546248fb17a"),
+					Paths: "stable-changeling.quiet-kingpin.flexible-humbug",
+				},
+			},
+		},
+		{
 			name: "Invalid OrgID",
 			orgID: uuid.FromStringOrNil("invalid-org-id"),
 			want: []folder.Folder{},
