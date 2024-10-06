@@ -48,17 +48,28 @@ func GenerateData() []Folder {
 
 		name := codename.Generate(rng, 0)
 
-		subtree := make(chan []Folder)
-		go func() {
-			subtree <- generateTree(1, []Folder{
-				{
-					Name:  name,
-					OrgId: orgId,
-					Paths: name,
-				},
-			})
-		}()
-		tree = append(tree, <-subtree...)
+		// Changed to fit the new hierarchial data structure
+		root := Folder{
+			Name:  name,
+			OrgId: orgId,
+			Paths: name,
+		}
+
+		root.ChildFolders = generateTree(1, []Folder{root})
+
+		tree = append(tree, root)
+
+		// subtree := make(chan []Folder)
+		// go func() {
+		// 	subtree <- generateTree(1, []Folder{
+		// 		{
+		// 			Name:  name,
+		// 			OrgId: orgId,
+		// 			Paths: name,
+		// 		},
+		// 	})
+		// }()
+		// tree = append(tree, <-subtree...)
 	}
 
 	return tree
@@ -72,22 +83,42 @@ func generateTree(depth int, tree []Folder) []Folder {
 		return tree
 	}
 
+	// t refers to each folder 't' in the current tree slice/hierarchy
 	for _, t := range tree {
 		numOfChild := rng.Int()%MaxChild + 1
+
+		// This loop runs 'numOfChild' times to create the child folders for the current parent folder
+		// it generates a new child folder for each iteration
+		// Since I'm adding subfolder and adding depth, then i need to modify this loop
+		// to recursively generate subtrees for each folder
 		for i := 0; i < numOfChild; i++ {
 			name := codename.Generate(rng, 0)
 
-			childTree := make(chan []Folder)
-			go func() {
-				childTree <- generateTree(depth+1, []Folder{
-					{
-						Name:  name,
-						OrgId: t.OrgId,
-						Paths: t.Paths + "." + name,
-					},
-				})
-			}()
-			tree = append(tree, <-childTree...)
+			childFolder := Folder{
+				Name: name,
+				OrgId: t.OrgId,
+				Paths: t.Paths + "." + name,
+			}
+
+			// I generate further childFolders for the childFolder datastructure that I just created
+			// to populate the tree, then append it to the current tree's ChildFolder property
+			childFolder.ChildFolders = generateTree(depth+1, []Folder{childFolder})
+
+			t.ChildFolders = append(t.ChildFolders, childFolder)
+
+
+			// childTree := make(chan []Folder)
+			// go func() {
+			// 	childTree <- generateTree(depth+1, []Folder{
+			// 		{
+			// 			Name:  name,
+			// 			OrgId: t.OrgId,
+			// 			Paths: t.Paths + "." + name,
+			// 			ChildFolders: generateTree(depth+1, []Folder{})
+			// 		},
+			// 	})
+			// }()
+			// tree = append(tree, <-childTree...)
 		}
 	}
 
