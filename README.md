@@ -2,7 +2,6 @@
 
 
 ## My comments/notes
----
 - My implementation for the take-home involves using three data structures when creating the driver:
 	- folderTree: a tree implementation of all the folders - this is implemented by using a folderNode struct that contains the folder itself with a childNode map that uses the name of the immediate child node as a key to the next folderNode
 	- foldersByName: a map data structure that uses folder names as a key to a slice of a FolderMapping struct that contains information about the folder's OrgId and the path where it can be found
@@ -15,9 +14,8 @@
 - The test cases also read from a file `sample3.json` which was generated through changing the parameters of `static.go` and then editing it for additional edge cases
 	- A visual representation of that folder structure can be viewed below
 
-![[sample3.PNG]]
+!(sample3.PNG)
 
----
 The technical take home for 2024 internship applications.
 
 ## Getting started
