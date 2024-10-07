@@ -14,7 +14,7 @@
 - The test cases also read from a file `sample3.json` which was generated through changing the parameters of `static.go` and then editing it for additional edge cases
 	- A visual representation of that folder structure can be viewed below
 
-!(sample3.PNG)
+!(sample3.png)
 
 The technical take home for 2024 internship applications.
 
