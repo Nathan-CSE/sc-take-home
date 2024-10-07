@@ -9,16 +9,14 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	// information to specify
 	targetFolderSlice, exists := f.foldersByName[name]
 	if !exists {
-		fmt.Println(errors.New("Folder name does not exist."))
-		return []Folder{}, nil
+		return []Folder{}, errors.New(fmt.Sprintf("Target folder '%s' does not exist.", name))
 	}
-
+	
 	targetFolder := targetFolderSlice[0]
 	
 	dstFolderSlice, exists := f.foldersByName[dst]
 	if !exists {
-		fmt.Println(errors.New("Folder name does not exist."))
-		return []Folder{}, nil
+		return []Folder{}, errors.New(fmt.Sprintf("Destination folder '%s' does not exist.", dst))
 	}
 	
 	dstFolder := dstFolderSlice[0]
@@ -27,6 +25,17 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	if targetFolder.OrgId != dstFolder.OrgId {
 		return []Folder{}, errors.New(fmt.Sprintf("Target folder '%s' and destination folder '%s' are not part of the same orgID.", name, dst))
 	}
+
+	// Check if trying to move a folder to itself
+	if targetFolder.Paths == dstFolder.Paths {
+		return []Folder{}, errors.New(fmt.Sprintf("Cannot move folder '%s' to itself.", name))
+	}
+
+	// Check if destination path starts with the target folder's path to prevent moving a folder to a child
+	if strings.HasPrefix(dstFolder.Paths, targetFolder.Paths + ".") {
+		return []Folder{}, errors.New(fmt.Sprintf("Cannot move folder '%s' to a child of itself '%s'.", name, dst))
+	}
+
 
 	// Traverse the tree to check if both the target/destination folders exist
 	targetNode, err := traverseFolderTree(targetFolder.OrgId, targetFolder.Paths, f.folderTree)
@@ -64,7 +73,10 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	// Add the target node to the destination map of the destination folder
 	dstNode.ChildNodes[name] = targetNode
 
-	return []Folder{}, nil
+	// Return the new folderTree for that org
+	newFolderTree := f.GetFoldersByOrgID(targetFolder.OrgId)
+
+	return newFolderTree, nil
 }
 
 // Recursively updates the paths in both foldersByName and folderTree

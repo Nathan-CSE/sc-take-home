@@ -21,10 +21,10 @@ import (
 const MaxRootSet = 2
 
 // maximum possible children per node
-const MaxChild = 2
+const MaxChild = 3
 
 // max depth of the tree
-const MaxDepth = 3
+const MaxDepth = 4
 
 // the default orgID that we will be using for testing
 const DefaultOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
@@ -108,7 +108,7 @@ func GetSampleData() []Folder {
 	fmt.Println(filename)
 	basePath := filepath.Dir(filename)
 	// filePath := filepath.Join(basePath, "sample.json")
-	filePath := filepath.Join(basePath, "sample2.json")
+	filePath := filepath.Join(basePath, "sample3.json")
 
 	fmt.Println(filePath)
 
@@ -138,7 +138,7 @@ func WriteSampleData(data interface{}) {
 	fmt.Println(filename)
 	basePath := filepath.Dir(filename)
 	// filePath := filepath.Join(basePath, "sample.json")
-	filePath := filepath.Join(basePath, "sample2.json")
+	filePath := filepath.Join(basePath, "sample3.json")
 
 	fmt.Println(filePath)
 

@@ -1,5 +1,23 @@
 # sc-interns-2024
 
+
+## My comments/notes
+---
+- My implementation for the take-home involves using three data structures when creating the driver:
+	- folderTree: a tree implementation of all the folders - this is implemented by using a folderNode struct that contains the folder itself with a childNode map that uses the name of the immediate child node as a key to the next folderNode
+	- foldersByName: a map data structure that uses folder names as a key to a slice of a FolderMapping struct that contains information about the folder's OrgId and the path where it can be found
+		- This was used to cut down on search costs, with a slice used to handle duplicate folder names in different OrgIds
+	- allOrgIDs: This was initially used to uniquely store all orgIDs for error handling, but I forgot to use it whilst coding my solution
+- When creating the driver, a tree is created which makes the data more easily manipulated and intuitive, which makes getting child folders and moving them easier
+- I would like to also apologise for the structuring of my data, unfortunately due to time crunch on my part, a majority of my method implementation was verified through manually checking the org folders after each operation using the provided function
+	- As such, my tests are not structured the best -> as I hard-coded the expected output within the test file itself instead of reading from a `.json` file
+	- Ideally, if I had more time I would've implemented my tests first and figured out a way to read from a `.json` instead of making a mess of my test files
+- The test cases also read from a file `sample3.json` which was generated through changing the parameters of `static.go` and then editing it for additional edge cases
+	- A visual representation of that folder structure can be viewed below
+
+![[sample3.PNG]]
+
+---
 The technical take home for 2024 internship applications.
 
 ## Getting started
