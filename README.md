@@ -12,7 +12,7 @@
 	- As such, my tests are not structured the best -> as I hard-coded the expected output within the test file itself instead of reading from a `.json` file
 	- Ideally, if I had more time I would've implemented my tests first and figured out a way to read from a `.json` instead of making a mess of my test files
 - The test cases also read from a file `sample3.json` which was generated through changing the parameters of `static.go` and then editing it for additional edge cases
-	- A visual representation of that folder structure can be viewed below
+	- A visual representation of that folder structure can be viewed below.
 
 !(sample3.png)
 
