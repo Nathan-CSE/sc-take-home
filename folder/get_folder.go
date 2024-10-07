@@ -17,8 +17,6 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 		return []Folder{}
 	}
 
-	rootNode = rootNode
-
 	allFolders := []Folder{}
 	collectFolders(rootNode, &allFolders)
 
@@ -34,7 +32,6 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 	}
 
 	// Check if the specified folder name exists in orgFolder and get its path
-
 	folderDetailsSlice, exists := f.foldersByName[name]
 	if !exists {
 		fmt.Println(errors.New("Folder name does not exist."))

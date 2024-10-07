@@ -116,7 +116,3 @@ func printFolderTree(node *FolderNode, level int) {
 		printFolderTree(child, level + 1)
 	}
 }
-
-
-
-// func traverseFolderTree()
